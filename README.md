@@ -1,176 +1,535 @@
-# 💰 Money Tracker
+# MoneyTracker - Aplikasi Pencatat Keuangan
 
-Money Tracker adalah aplikasi manajemen keuangan pribadi *full-stack* yang dirancang untuk membantu Anda melacak pemasukan dan pengeluaran dengan mudah. Aplikasi ini dibangun dengan teknologi web modern untuk performa yang cepat dan pengalaman pengguna yang responsif.
+Aplikasi web untuk mencatat dan memonitor pemasukan dan pengeluaran keuangan pribadi dengan tampilan clean, responsive, dan mobile-friendly.
 
-## ✨ Fitur Utama
+![MoneyTracker](https://img.shields.io/badge/Version-1.0.0-blue) ![License](https://img.shields.io/badge/License-MIT-green)
 
--   **Dashboard Ringkas**: Lihat total saldo, pemasukan, dan pengeluaran secara *real-time*.
--   **Pencatatan Transaksi**: Tambah pemasukan dan pengeluaran dengan mudah lengkap dengan kategori.
--   **Manajemen Kategori**: Gunakan kategori default atau buat kategori kustom (Contoh: "Jajan", "Bensin").
--   **Analisis Keuangan**: Visualisasi statistik pengeluaran berdasarkan kategori.
--   **Multi-Role Authentication**: Sistem login aman dengan role `User` dan `Superadmin`.
+## 📋 Fitur Utama
 
-## 🛠️ Teknologi yang Digunakan
+### Untuk Semua User:
+- ✅ **Login Multi-User** dengan autentikasi JWT
+- ✅ **Dashboard** dengan ringkasan keuangan (total pemasukan, pengeluaran, saldo)
+- ✅ **Manajemen Transaksi** - Tambah, edit, hapus, dan filter transaksi
+- ✅ **Kategori Default** - Makanan, Belanja Online, Paket, Tagihan, Transportasi, dll
+- ✅ **Custom Kategori** - Buat kategori sendiri sesuai kebutuhan
+- ✅ **Statistik & Breakdown** - Lihat breakdown per kategori
+- ✅ **Responsive Design** - Optimal untuk desktop dan mobile
+- ✅ **Download Source Code** - Download semua file aplikasi dalam format ZIP
 
-*   **Frontend**: React.js, Tailwind CSS
-*   **Backend**: Python FastAPI
-*   **Database**: MongoDB
-*   **Infrastructure**: Docker & Docker Compose
+### Untuk Superadmin:
+- ✅ **Manajemen User** - Buat user baru (user biasa atau superadmin)
+- ✅ Semua fitur user biasa
 
----
+## 🛠️ Tech Stack
 
-## ⚙️ Konfigurasi Environment (.env)
+### Backend:
+- **FastAPI** (Python) - Modern REST API framework
+- **MongoDB** - NoSQL database dengan Motor (async driver)
+- **JWT Authentication** - Token-based authentication
+- **Bcrypt** - Password hashing
+- **Pydantic** - Data validation
 
-Project ini menggunakan `dotenv` untuk manajemen konfigurasi. Karena file `.env` berisi informasi sensitif (seperti password dan secret key), file ini **tidak disertakan** dalam repository (git ignored).
+### Frontend:
+- **React 19** - UI framework
+- **React Router** - Navigation
+- **Tailwind CSS** - Styling
+- **Shadcn UI** - Component library
+- **Axios** - HTTP client
+- **Sonner** - Toast notifications
+- **Lucide React** - Icons
 
-Anda perlu membuat **dua** file `.env` agar aplikasi berjalan dengan lancar: satu di **root folder** (untuk Docker) dan satu di folder **backend** (untuk development lokal).
+## 📁 Struktur Project
 
-### 1. Root Folder (`./.env`)
-File ini digunakan oleh **Docker Compose** untuk mengkonfigurasi container database dan menghubungkan frontend ke backend.
-
-**Contoh isi file `.env` di root:**
-```env
-MONGO_URL=mongodb://mongodb:27017
-DB_NAME=money_tracker_db
-JWT_SECRET_KEY=ganti_dengan_secret_key_yang_sangat_rahasia
-CORS_ORIGINS=*
-REACT_APP_BACKEND_URL=http://localhost:8001
+```
+money-tracker/
+├── backend/
+│   ├── server.py          # Main FastAPI application
+│   ├── requirements.txt   # Python dependencies
+│   └── .env              # Environment variables
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/   # Reusable components
+│   │   │   ├── Layout.jsx
+│   │   │   └── ui/       # Shadcn UI components
+│   │   ├── pages/        # Page components
+│   │   │   ├── LoginPage.jsx
+│   │   │   ├── DashboardPage.jsx
+│   │   │   ├── TransactionsPage.jsx
+│   │   │   ├── CategoriesPage.jsx
+│   │   │   ├── AdminPage.jsx
+│   │   │   └── DownloadPage.jsx
+│   │   ├── App.js        # Main app component
+│   │   ├── App.css       # Global styles
+│   │   └── index.js      # Entry point
+│   ├── package.json      # Node dependencies
+│   └── .env             # Environment variables
+└── README.md            # This file
 ```
 
-### 2. Backend Folder (`./backend/.env`)
-File ini digunakan saat Anda menjalankan backend **secara manual** (tanpa Docker), agar backend bisa terhubung ke database lokal.
+## 🚀 Cara Menjalankan Aplikasi (MongoDB - Default)
 
-**Contoh isi file `backend/.env`:**
+### Prerequisites:
+1. **Python 3.8+** - [Download Python](https://www.python.org/downloads/)
+2. **Node.js 16+** dan **yarn** - [Download Node.js](https://nodejs.org/)
+3. **MongoDB** - [Download MongoDB Community](https://www.mongodb.com/try/download/community)
+
+### Setup Windows:
+
+#### 1. Install MongoDB
+```bash
+# Download dan install MongoDB Community Edition dari:
+# https://www.mongodb.com/try/download/community
+
+# Setelah install, jalankan MongoDB:
+"C:\Program Files\MongoDB\Server\7.0\bin\mongod.exe" --dbpath="C:\data\db"
+
+# Atau install sebagai Windows Service (recommended)
+```
+
+#### 2. Setup Backend
+```bash
+# Buka Command Prompt atau PowerShell
+cd backend
+
+# Buat virtual environment
+python -m venv venv
+
+# Aktifkan virtual environment
+venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Edit file .env dan sesuaikan MONGO_URL jika perlu
+# Default: MONGO_URL="mongodb://localhost:27017"
+
+# Jalankan server
+uvicorn server:app --reload --host 0.0.0.0 --port 8001
+```
+
+#### 3. Setup Frontend
+```bash
+# Buka Command Prompt baru
+cd frontend
+
+# Install dependencies
+yarn install
+
+# Edit file .env
+# Ubah REACT_APP_BACKEND_URL=http://localhost:8001
+
+# Jalankan development server
+yarn start
+```
+
+#### 4. Akses Aplikasi
+Buka browser dan akses: **http://localhost:3000**
+
+**Default Login:**
+- Username: `superadmin`
+- Password: `admin123`
+
+### Setup Linux (Ubuntu/Debian):
+
+#### 1. Install MongoDB
+```bash
+# Import MongoDB public GPG key
+wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | sudo apt-key add -
+
+# Add MongoDB repository
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+
+# Update package database
+sudo apt-get update
+
+# Install MongoDB
+sudo apt-get install -y mongodb-org
+
+# Start MongoDB service
+sudo systemctl start mongod
+sudo systemctl enable mongod
+
+# Verify MongoDB is running
+sudo systemctl status mongod
+```
+
+#### 2. Setup Backend
+```bash
+cd backend
+
+# Install Python virtual environment
+sudo apt-get install python3-venv
+
+# Create virtual environment
+python3 -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Edit .env file if needed
+nano .env
+
+# Run server
+uvicorn server:app --reload --host 0.0.0.0 --port 8001
+```
+
+#### 3. Setup Frontend
+```bash
+# Open new terminal
+cd frontend
+
+# Install Node.js and yarn if not installed
+sudo apt-get install nodejs npm
+sudo npm install -g yarn
+
+# Install dependencies
+yarn install
+
+# Edit .env file
+# Change REACT_APP_BACKEND_URL=http://localhost:8001
+nano .env
+
+# Run development server
+yarn start
+```
+
+#### 4. Access Application
+Open browser: **http://localhost:3000**
+
+### Setup macOS:
+
+#### 1. Install MongoDB
+```bash
+# Install Homebrew if not installed
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install MongoDB
+brew tap mongodb/brew
+brew install mongodb-community@7.0
+
+# Start MongoDB service
+brew services start mongodb-community@7.0
+
+# Verify MongoDB is running
+brew services list
+```
+
+#### 2. Setup Backend & Frontend
+```bash
+# Follow same steps as Linux setup above
+```
+
+## 🐳 Cara Menjalankan dengan Docker (Recommended)
+
+### 1. Install Docker
+- **Windows/Mac**: [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- **Linux**: [Docker Engine](https://docs.docker.com/engine/install/)
+
+### 2. Buat Docker Compose File
+
+Buat file `docker-compose.yml` di root project:
+
+```yaml
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: money-tracker-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: money_tracker_db
+
+  backend:
+    build: ./backend
+    container_name: money-tracker-backend
+    restart: always
+    ports:
+      - "8001:8001"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017
+      - DB_NAME=money_tracker_db
+      - JWT_SECRET_KEY=your-secret-key-change-in-production
+    command: uvicorn server:app --host 0.0.0.0 --port 8001
+
+  frontend:
+    build: ./frontend
+    container_name: money-tracker-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8001
+
+volumes:
+  mongodb_data:
+```
+
+### 3. Buat Dockerfile untuk Backend
+
+Buat file `backend/Dockerfile`:
+
+```dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8001
+
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8001"]
+```
+
+### 4. Buat Dockerfile untuk Frontend
+
+Buat file `frontend/Dockerfile`:
+
+```dockerfile
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY package.json yarn.lock ./
+RUN yarn install
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["yarn", "start"]
+```
+
+### 5. Jalankan dengan Docker Compose
+
+```bash
+# Build dan start semua services
+docker-compose up -d
+
+# Lihat logs
+docker-compose logs -f
+
+# Stop semua services
+docker-compose down
+
+# Stop dan hapus volumes (reset database)
+docker-compose down -v
+```
+
+### 6. Akses Aplikasi
+Buka browser: **http://localhost:3000**
+
+## 🗄️ Database Schema (MongoDB)
+
+### Collections:
+
+#### 1. users
+```javascript
+{
+  id: "uuid",
+  username: "string",
+  password_hash: "string",
+  role: "user" | "superadmin",
+  created_at: "ISO date string"
+}
+```
+
+#### 2. categories
+```javascript
+{
+  id: "uuid",
+  name: "string",
+  type: "income" | "expense",
+  is_custom: boolean,
+  user_id: "uuid" | null,  // null for default categories
+  created_at: "ISO date string"
+}
+```
+
+#### 3. transactions
+```javascript
+{
+  id: "uuid",
+  user_id: "uuid",
+  type: "income" | "expense",
+  category_id: "uuid",
+  category_name: "string",
+  amount: number,
+  description: "string" | null,
+  date: "YYYY-MM-DD",
+  created_at: "ISO date string"
+}
+```
+
+## 🔌 API Endpoints
+
+### Authentication
+- `POST /api/auth/login` - Login user
+- `POST /api/auth/register` - Register new user (superadmin only)
+
+### Users
+- `GET /api/users/me` - Get current user info
+- `GET /api/users` - Get all users (superadmin only)
+
+### Categories
+- `GET /api/categories` - Get all categories (default + user's custom)
+- `POST /api/categories` - Create custom category
+
+### Transactions
+- `GET /api/transactions` - Get user's transactions
+- `POST /api/transactions` - Create transaction
+- `PUT /api/transactions/{id}` - Update transaction
+- `DELETE /api/transactions/{id}` - Delete transaction
+- `GET /api/transactions/stats` - Get transaction statistics
+
+### Download
+- `GET /api/download/source-code` - Download source code as ZIP
+
+## 🔐 Keamanan
+
+1. **Password Hashing** - Menggunakan bcrypt
+2. **JWT Token** - Expire dalam 7 hari
+3. **Protected Routes** - Hanya user terautentikasi yang bisa akses
+4. **Role-Based Access** - Superadmin memiliki akses tambahan
+5. **CORS** - Configured untuk mencegah unauthorized access
+
+## 🎨 Design
+
+- **Color Scheme**: Gradient biru, indigo, dan ungu dengan tone pastel
+- **Typography**: Manrope (headings), Inter (body text)
+- **Layout**: Card-based dengan shadow dan hover effects
+- **Responsive**: Mobile-first approach dengan breakpoints yang optimal
+- **Icons**: Lucide React icons
+
+## 📱 Mobile Friendly
+
+Aplikasi fully responsive dan dapat diakses dengan baik di:
+- 📱 Mobile phones (320px+)
+- 📱 Tablets (768px+)
+- 💻 Desktops (1024px+)
+- 🖥️ Large screens (1920px+)
+
+## 🐛 Troubleshooting
+
+### Backend tidak bisa connect ke MongoDB:
+```bash
+# Pastikan MongoDB running
+# Windows:
+net start MongoDB
+
+# Linux/Mac:
+sudo systemctl status mongod
+```
+
+### Frontend tidak bisa connect ke Backend:
+- Pastikan `REACT_APP_BACKEND_URL` di `frontend/.env` benar
+- Pastikan backend running di port 8001
+- Check CORS settings di `backend/server.py`
+
+### Port sudah digunakan:
+```bash
+# Windows - Kill process di port 8001:
+netstat -ano | findstr :8001
+taskkill /PID <PID> /F
+
+# Linux/Mac - Kill process di port 8001:
+lsof -ti:8001 | xargs kill -9
+```
+
+## 📝 Environment Variables
+
+### Backend (.env):
 ```env
 MONGO_URL="mongodb://localhost:27017"
 DB_NAME="money_tracker_db"
 CORS_ORIGINS="*"
-JWT_SECRET_KEY="ganti_dengan_secret_key_yang_sangat_rahasia"
+JWT_SECRET_KEY="your-secret-key-change-in-production"
 ```
+
+### Frontend (.env):
+```env
+REACT_APP_BACKEND_URL=http://localhost:8001
+```
+
+## 🚀 Deploy ke Production
+
+### Deploy Backend:
+
+**Heroku / Railway / Render:**
+1. Push code ke Git repository
+2. Connect repository ke platform
+3. Set environment variables
+4. Deploy
+
+**VPS (DigitalOcean, AWS, dll):**
+```bash
+# Install dependencies
+sudo apt-get update
+sudo apt-get install python3-pip nginx
+
+# Setup MongoDB
+# Follow Linux setup above
+
+# Deploy backend dengan gunicorn
+pip install gunicorn
+gunicorn server:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8001
+
+# Setup nginx reverse proxy
+# Configure SSL dengan Let's Encrypt
+```
+
+### Deploy Frontend:
+
+**Vercel / Netlify:**
+1. Push code ke Git repository
+2. Connect repository
+3. Set build command: `yarn build`
+4. Set publish directory: `build`
+5. Set environment variable: `REACT_APP_BACKEND_URL`
+
+**Static Hosting:**
+```bash
+cd frontend
+yarn build
+# Upload folder 'build' ke hosting
+```
+
+## 📄 Lisensi
+
+MIT License - Anda bebas menggunakan, memodifikasi, dan mendistribusikan aplikasi ini.
+
+**Copyright © 2025 Arya Dinata. All rights reserved.**
+
+## 🤝 Kontribusi
+
+Kontribusi selalu diterima! Silakan:
+1. Fork repository
+2. Buat branch baru
+3. Commit changes
+4. Push ke branch
+5. Buat Pull Request
+
+## 📞 Support
+
+Jika ada pertanyaan atau masalah, silakan buat issue di repository.
 
 ---
 
-## 🚀 Cara Menjalankan Aplikasi
+**MoneyTracker** - Kelola keuangan Anda dengan mudah! 💰📊
 
-Anda dapat menjalankan aplikasi ini dengan dua cara: menggunakan **Docker** (Direkomendasikan) atau secara **Manual**.
-
-### Opsi 1: Menggunakan Docker (Direkomendasikan)
-
-Pastikan Anda sudah menginstall [Docker](https://www.docker.com/) dan [Docker Compose](https://docs.docker.com/compose/).
-
-1.  **Clone repository ini:**
-    ```bash
-    git clone https://github.com/username-anda/money-update.git
-    cd money-update
-    ```
-
-2.  **Jalankan dengan Docker Compose:**
-    ```bash
-    docker-compose up --build
-    ```
-    *Perintah ini akan otomatis mendownload image yang dibutuhkan, membangun container, dan menghubungkan database.*
-
-3.  **Akses Aplikasi:**
-    *   **Frontend (Web UI)**: Buka [http://localhost:3000](http://localhost:3000)
-    *   **Backend API (Docs)**: Buka [http://localhost:8001/docs](http://localhost:8001/docs)
-
-4.  **Login Default (Superadmin):**
-    *   **Username:** `superadmin`
-    *   **Password:** `admin123`
-
----
-
-### Opsi 2: Menjalankan Secara Manual (Tanpa Docker)
-
-Jika Anda tidak menggunakan Docker, Anda perlu menginstall **Python**, **Node.js**, dan **MongoDB** secara terpisah di komputer Anda.
-
-#### Prasyarat
-*   Python 3.9+ installed
-*   Node.js 16+ & npm installed
-*   MongoDB Server installed & running (Port 27017)
-
-#### 1. Setup Backend (Server)
-
-1.  Masuk ke folder backend:
-    ```bash
-    cd backend
-    ```
-
-2.  Buat virtual environment (opsional tapi disarankan):
-    ```bash
-    python -m venv venv
-    # Windows:
-    venv\Scripts\activate
-    # Mac/Linux:
-    source venv/bin/activate
-    ```
-
-3.  Install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4.  Konfigurasi Environment Variables:
-    *   Buat file `.env` di dalam folder `backend` atau set environment variables secara manual.
-    *   Minimal dibutuhkan:
-        ```bash
-        MONGO_URL=mongodb://localhost:27017
-        DB_NAME=money_tracker_db
-        JWT_SECRET_KEY=rahasia-banget-ganti-ya
-        ```
-    *   *Catatan: Aplikasi akan mencoba membaca dari environment sistem jika .env tidak ada, namun pastikan MongoDB sudah jalan.*
-
-5.  Jalankan Server:
-    ```bash
-    uvicorn server:app --reload --port 8001
-    ```
-    Server backend akan berjalan di `http://localhost:8001`.
-
-#### 2. Setup Frontend (Client)
-
-1.  Buka terminal baru, masuk ke folder frontend:
-    ```bash
-    cd frontend
-    ```
-
-2.  Install dependencies:
-    ```bash
-    npm install
-    # atau
-    yarn install
-    ```
-
-3.  Konfigurasi Environment Variable:
-    *   Buat file `.env` di dalam folder `frontend` (jika belum ada) dan isi:
-        ```
-        REACT_APP_BACKEND_URL=http://localhost:8001
-        ```
-    *   *Penting: Pastikan URL backend sesuai dengan port backend yang Anda jalankan.*
-
-4.  Jalankan Frontend:
-    ```bash
-    npm start
-    ```
-    Aplikasi akan terbuka otomatis di browser (biasanya `http://localhost:3000`).
-
----
-
-## 📂 Struktur Project
-
-```
-money-tracker/
-├── backend/                # Kode sumber Backend (Python/FastAPI)
-│   ├── server.py           # Entry point aplikasi
-│   ├── requirements.txt    # Daftar library Python
-│   └── Dockerfile          # Konfigurasi Docker Backend
-├── frontend/               # Kode sumber Frontend (React)
-│   ├── src/                # Komponen React & Pages
-│   ├── public/             # Aset statis
-│   └── Dockerfile          # Konfigurasi Docker Frontend
-├── docker-compose.yml      # Orkestrasi container
-└── README.md               # Dokumentasi ini
-```
-
-## 📝 Catatan Penting
-*   **Database**: Data akan tersimpan di volume Docker `mongodb_data` (jika pakai Docker) atau di instalasi MongoDB lokal Anda.
-*   **Keamanan**: Jangan lupa mengganti `JWT_SECRET_KEY` sebelum deploy ke production!
+**Copyright © 2025 Arya Dinata. All rights reserved.**
