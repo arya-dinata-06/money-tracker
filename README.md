@@ -1,14 +1,23 @@
-# 💰 Money Tracker
+# 💰 MoneyTracker - Aplikasi Pencatat Keuangan
 
 Money Tracker adalah aplikasi manajemen keuangan pribadi *full-stack* yang dirancang untuk membantu Anda melacak pemasukan dan pengeluaran dengan mudah. Aplikasi ini dibangun dengan teknologi web modern untuk performa yang cepat dan pengalaman pengguna yang responsif.
 
-## ✨ Fitur Utama
+![MoneyTracker](https://img.shields.io/badge/Version-1.0.0-blue) ![License](https://img.shields.io/badge/License-MIT-green)
 
--   **Dashboard Ringkas**: Lihat total saldo, pemasukan, dan pengeluaran secara *real-time*.
--   **Pencatatan Transaksi**: Tambah pemasukan dan pengeluaran dengan mudah lengkap dengan kategori.
--   **Manajemen Kategori**: Gunakan kategori default atau buat kategori kustom (Contoh: "Jajan", "Bensin").
--   **Analisis Keuangan**: Visualisasi statistik pengeluaran berdasarkan kategori.
--   **Multi-Role Authentication**: Sistem login aman dengan role `User` dan `Superadmin`.
+## 📋 Fitur Utama
+
+### Untuk Semua User:
+- ✅ **Login Multi-User** dengan autentikasi JWT
+- ✅ **Dashboard** dengan ringkasan keuangan (total pemasukan, pengeluaran, saldo)
+- ✅ **Manajemen Transaksi** - Tambah, edit, hapus, dan filter transaksi
+- ✅ **Kategori Default** - Makanan, Belanja Online, Paket, Tagihan, Transportasi, dll
+- ✅ **Custom Kategori** - Buat kategori sendiri sesuai kebutuhan
+- ✅ **Statistik & Breakdown** - Lihat breakdown per kategori
+- ✅ **Responsive Design** - Optimal untuk desktop dan mobile
+
+### Untuk Superadmin:
+- ✅ **Manajemen User** - Buat user baru (user biasa atau superadmin)
+- ✅ Semua fitur user biasa
 
 ## 🛠️ Teknologi yang Digunakan
 
@@ -160,17 +169,167 @@ Jika Anda tidak menggunakan Docker, Anda perlu menginstall **Python**, **Node.js
 ```
 money-tracker/
 ├── backend/                # Kode sumber Backend (Python/FastAPI)
-│   ├── server.py           # Entry point aplikasi
-│   ├── requirements.txt    # Daftar library Python
-│   └── Dockerfile          # Konfigurasi Docker Backend
+│   ├── server.py           # Entry point aplikasi & Core Logic
+│   ├── requirements.txt    # Daftar dependensi Python
+│   ├── Dockerfile          # Konfigurasi Docker container backend
+│   └── .env                # Config variables (lokal/development)
 ├── frontend/               # Kode sumber Frontend (React)
-│   ├── src/                # Komponen React & Pages
-│   ├── public/             # Aset statis
-│   └── Dockerfile          # Konfigurasi Docker Frontend
-├── docker-compose.yml      # Orkestrasi container
-└── README.md               # Dokumentasi ini
+│   ├── public/             # Folder aset statis (favicon, index.html)
+│   ├── src/                # Kode utama React
+│   │   ├── components/     # Komponen UI reusable (Button, Input, Layout)
+│   │   ├── pages/          # Komponen Halaman (Login, Dashboard, Admin)
+│   │   ├── App.js          # Main Component & Routing
+│   │   ├── index.css       # Global styles & Tailwind imports
+│   │   └── index.js        # Entry point React
+│   ├── package.json        # Daftar dependencies Node.js
+│   ├── tailwind.config.js  # Konfigurasi Tailwind CSS
+│   └── Dockerfile          # Konfigurasi Docker container frontend
+├── docker-compose.yml      # Orkestrasi multi-container (DB, Backend, Frontend)
+├── .env                    # Environment variables utama (untuk Docker Compose)
+└── README.md               # Dokumentasi Project ini
 ```
+
+## 🗄️ Database Schema (MongoDB)
+
+### Collections:
+
+#### 1. users
+```javascript
+{
+  id: "uuid",
+  username: "string",
+  password_hash: "string",
+  role: "user" | "superadmin",
+  created_at: "ISO date string"
+}
+```
+
+#### 2. categories
+```javascript
+{
+  id: "uuid",
+  name: "string",
+  type: "income" | "expense",
+  is_custom: boolean,
+  user_id: "uuid" | null,  // null for default categories
+  created_at: "ISO date string"
+}
+```
+
+#### 3. transactions
+```javascript
+{
+  id: "uuid",
+  user_id: "uuid",
+  type: "income" | "expense",
+  category_id: "uuid",
+  category_name: "string",
+  amount: number,
+  description: "string" | null,
+  date: "YYYY-MM-DD",
+  created_at: "ISO date string"
+}
+```
+
+## 🔌 API Endpoints
+
+### Authentication
+- `POST /api/auth/login` - Login user
+- `POST /api/auth/register` - Register new user (superadmin only)
+
+### Users
+- `GET /api/users/me` - Get current user info
+- `GET /api/users` - Get all users (superadmin only)
+
+### Categories
+- `GET /api/categories` - Get all categories (default + user's custom)
+- `POST /api/categories` - Create custom category
+
+### Transactions
+- `GET /api/transactions` - Get user's transactions
+- `POST /api/transactions` - Create transaction
+- `PUT /api/transactions/{id}` - Update transaction
+- `DELETE /api/transactions/{id}` - Delete transaction
+- `GET /api/transactions/stats` - Get transaction statistics
+
+## 🔐 Keamanan
+
+1. **Password Hashing** - Menggunakan bcrypt
+2. **JWT Token** - Expire dalam 7 hari
+3. **Protected Routes** - Hanya user terautentikasi yang bisa akses
+4. **Role-Based Access** - Superadmin memiliki akses tambahan
+5. **CORS** - Configured untuk mencegah unauthorized access
+
+## 🎨 Design
+
+- **Color Scheme**: Gradient biru, indigo, dan ungu dengan tone pastel
+- **Typography**: Manrope (headings), Inter (body text)
+- **Layout**: Card-based dengan shadow dan hover effects
+- **Responsive**: Mobile-first approach dengan breakpoints yang optimal
+- **Icons**: Lucide React icons
+
+## 📱 Mobile Friendly
+
+Aplikasi fully responsive dan dapat diakses dengan baik di:
+- 📱 Mobile phones (320px+)
+- 📱 Tablets (768px+)
+- 💻 Desktops (1024px+)
+- 🖥️ Large screens (1920px+)
+
+## 🐛 Troubleshooting
+
+### Backend tidak bisa connect ke MongoDB:
+```bash
+# Pastikan MongoDB running
+# Windows:
+net start MongoDB
+
+# Linux/Mac:
+sudo systemctl status mongod
+```
+
+### Frontend tidak bisa connect ke Backend:
+- Pastikan `REACT_APP_BACKEND_URL` di `frontend/.env` benar
+- Pastikan backend running di port 8001
+- Check CORS settings di `backend/server.py`
+
+### Port sudah digunakan:
+```bash
+# Windows - Kill process di port 8001:
+netstat -ano | findstr :8001
+taskkill /PID <PID> /F
+
+# Linux/Mac - Kill process di port 8001:
+lsof -ti:8001 | xargs kill -9
+```
+
+## 📄 Lisensi
+
+MIT License - Anda bebas menggunakan, memodifikasi, dan mendistribusikan aplikasi ini.
+
+**Copyright © 2025 [Arya Dinata](https://aryadinata.my.id). All rights reserved.**
+
+## 🤝 Kontribusi
+
+Kontribusi selalu diterima! Silakan:
+1. Fork repository
+2. Buat branch baru
+3. Commit changes
+4. Push ke branch
+5. Buat Pull Request
+
+## 📞 Support
+
+Jika ada pertanyaan atau masalah, silakan buat issue di repository.
+
+---
 
 ## 📝 Catatan Penting
 *   **Database**: Data akan tersimpan di volume Docker `mongodb_data` (jika pakai Docker) atau di instalasi MongoDB lokal Anda.
 *   **Keamanan**: Jangan lupa mengganti `JWT_SECRET_KEY` sebelum deploy ke production!
+
+**MoneyTracker** - Kelola keuangan Anda dengan mudah! 💰📊
+
+**Copyright © 2025 [Arya Dinata](https://aryadinata.my.id). All rights reserved.**
+
+---
